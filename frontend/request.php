@@ -16,7 +16,7 @@ $result = $connector->run_query("SELECT `userid`,`username`,`fname`,`lname`,`exp
 $userCount = $connector->run_query("SELECT COUNT(*) FROM `users`", null, PDO::FETCH_NUM)[0][0];
 $disabled = $connector->run_query("SELECT COUNT(*) FROM `users` WHERE `disabled` = 1", null, PDO::FETCH_NUM)[0][0];
 // don't want to count disabled users as expired
-$expired = $connector->run_query("SELECT COUNT(*) FROM `users` WHERE expires < ? AND disabled = 0", array(date("Y-m-d")), PDO::FETCH_NUM)[0][0];
+$expired = $connector->run_query("SELECT COUNT(*) FROM `users` WHERE `expires` < ? AND `disabled` = 0", array(date("Y-m-d")), PDO::FETCH_NUM)[0][0];
 $invalid = $disabled + $expired;
 
 $valid = $userCount - $invalid;

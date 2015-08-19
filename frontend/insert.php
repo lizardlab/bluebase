@@ -23,7 +23,7 @@ $username = preg_replace("/[^A-Za-z0-9_@\-\.]/", "_", $username);
 // make sure that the user doesn't exist
 // database would reject duplicate username since its UNIQUE field
 // but this allows for easier discovery of any weird problems
-$existUser = $connector->run_query("SELECT `userid` FROM users WHERE username=?;", array($username), PDO::FETCH_NUM);
+$existUser = $connector->run_query("SELECT `userid` FROM `users` WHERE username=?;", array($username), PDO::FETCH_NUM);
 if(sizeof($existUser) == 0){
 	// validate that password and repeated password are equal
 	if($_POST["password"] == $_POST["repeat"]){
@@ -43,8 +43,8 @@ if(sizeof($existUser) == 0){
 				$expire = $_POST["expire"];
 			}
 			$new_user = array($username, $password, $_POST["fname"], $_POST["lname"], $expire, $_POST["status"]);
-			$connector->run_query("INSERT INTO `vpn`.`users` (`userid`, `username`, `hashed_pass`, `fname`, `lname`, `expires`, `disabled`) VALUES (NULL, ?, ?, ?, ?, ?, ?);", $new_user);
-			$userid = $connector->run_query("SELECT `userid` FROM users WHERE username=?;", array($username), PDO::FETCH_NUM)[0][0];
+			$connector->run_query("INSERT INTO `users` (`userid`, `username`, `hashed_pass`, `fname`, `lname`, `expires`, `disabled`) VALUES (NULL, ?, ?, ?, ?, ?, ?);", $new_user);
+			$userid = $connector->run_query("SELECT `userid` FROM `users` WHERE username=?;", array($username), PDO::FETCH_NUM)[0][0];
 			$resp = new created_user(true, "User created successfully", $username, $userid);
 			echo(json_encode($resp, JSON_PRETTY_PRINT));
 		}

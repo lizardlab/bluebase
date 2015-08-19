@@ -10,121 +10,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-datepicker.js"></script>
 <script src="js/chart.min.js"></script>
-<script>
-window.onload = loadElements;
-function loadElements(){
-  $('.datepicker').datepicker();
-  $('[data-toggle="popover"]').popover();
-  $.getJSON("request.php", processInfo);
-}
-function refreshData(){
-  //location.reload();
-}
-function processInfo(response){
-  userChart(response.statistics);
-  jsonTable(response.users);
-}
-function userChart(statistics){
-  var stats = [
-    {
-      value: statistics[0],
-      color: "#009933",
-      highlight: "#66C266",
-      label: "Enabled"
-    },
-    {
-      value: statistics[1],
-      color: "#C21418",
-      highlight: "#EC4A4F",
-      label: "Expired"
-    },
-    {
-      value: statistics[2],
-      color: "#444444",
-      highlight: "#777777",
-      label: "Disabled"
-    }
-  ]
-  var ctx = $("#userChart").get(0).getContext("2d");
-  var usrChart = new Chart(ctx).Pie(stats, {responsive: true});
-}
-function toggleExpire(){
-  if(document.getElementById("chkExpire").checked){
-    $("#expireInput").removeAttr("disabled");
-  }
-  else{
-     $("#expireInput").attr("disabled", "true");
-     $("#expire").val("");
-  }
-}
-function createUser(){
-  var acctStatus = "0";
-  var expiryDate = null;
-  var passwd;
-  var valiDate = /^\d{4}-[01]\d-[0-3]\d$/;
-  if(document.getElementById("status").checked){
-    acctStatus = "1";
-  }
-  else{
-    acctStatus = "0";
-  }
-  if(document.getElementById("chkExpire").checked){
-    var expiryDate = $("#expire").val();
-  }
-  else{
-    var expiryDate = null;
-  }
-  if(valiDate.test(expiryDate) == false &&  expiryDate != null){
-    alert("Expiration date not valid");
-  }
-  else if($("#password").val() == "" || $("#repeatpw").val() == ""){
-    alert("You must set a password and repeat it");
-  }
-  else if($("#password").val() != $("#repeatpw").val()){
-    alert("Password and repeated password do not match");
-  }
-  else{
-    var user = {
-      username: $("#username").val(),
-      fname: $("#fname").val(),
-      lname: $("#lname").val(),
-      expire: expiryDate,
-      status: acctStatus,
-      password: $("#password").val(),
-      repeat: $("#repeatpw").val(),
-    }
-    $.post("insert.php", user);
-    refreshData();
-  }
-}
-function jsonTable(users){
-  var table = document.getElementById('usersTable');
-  for(var i = 0; i < users.length; i++){
-    var newRow = table.insertRow();
-    var newCell = newRow.insertCell();
-    var newText = document.createTextNode(users[i].userid);
-    newCell.appendChild(newText);
-    newCell = newRow.insertCell();
-    newText = document.createTextNode(users[i].username);
-    newCell.appendChild(newText);
-    newCell = newRow.insertCell();
-    newText = document.createTextNode(users[i].fname);
-    newCell.appendChild(newText);
-    newCell = newRow.insertCell();
-    newText = document.createTextNode(users[i].lname);
-    newCell.appendChild(newText);
-    newCell = newRow.insertCell();
-    newText = document.createTextNode(users[i].expiration);
-    newCell.appendChild(newText);
-    newCell = newRow.insertCell();
-    if(users[i].disabled == 0)
-      newText = document.createTextNode('False');
-    else
-      newText = document.createTextNode('True');
-    newCell.appendChild(newText);
-  }
-}
-</script>
+<script src="js/bluebase.js"></script>
 </head>
 <body>
   <div class="container">
@@ -190,20 +76,82 @@ function jsonTable(users){
             <th>Last Name</th>
             <th>Expiration</th>
             <th>Disabled</th>
+            <th>Edit</th>
           </tr>
           <tbody id="usersTable">
           </tbody>
       </table>
     </div>
     <div class="col-md-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">User chart</h3>
-      </div>
-      <div class="panel-body">
-        <canvas id="userChart" width="250" height="200"></canvas>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">User chart</h3>
+        </div>
+        <div class="panel-body">
+          <canvas id="userChart" width="250" height="200"></canvas>
+        </div>
       </div>
     </div>
+    <div class="modal fade" id="changeUserModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Change User</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <hidden type="text" id="useridChg"></hidden>
+              <label>Username</label>
+              <input type="text" class="form-control" id="usernameChg" />
+            </div>
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" class="form-control" id="fnameChg" />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" class="form-control" id="lnameChg" />
+            </div>
+            <div class="checkbox">
+            <label><input id="chkExpireChg" type="checkbox" checked="true" onclick="toggleExpireChg();">Enable Expiration</input></label>
+            </div>
+            <fieldset id="expireInputChg">
+            <div class="form-group">
+              <label>Expiration Date</label>
+              <div class="input-group">
+                <input class="datepicker form-control" data-date-format="yyyy-mm-dd" id="expireChg" pattern="d{4}-d{2}-d{2}"></input> 
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+              </div>
+            </div>
+            </fieldset>
+            <label>Account status</label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" id="statusChg">Disabled</input>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Password</label>&nbsp;<small>(Only set if needs change)</small>
+              <input type="password" placeholder="password" class="form-control" id="passwordChg" />
+            </div>
+            <div class="form-group">
+              <label>Repeat Password</label>
+              <input type="password" placeholder="repeat" class="form-control" id="repeatpwChg" />
+            </div>
+            <div class="form-group">
+              <label>Delete User</label><br />
+              <button type="button" class="btn btn-danger" onclick="deleteUser();">Delete Permanently</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="changeUser();">Save changes</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </body>
