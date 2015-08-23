@@ -16,7 +16,7 @@ These instructions are designed for Debian 8 systems. Debian 7 systems could wor
 
 Run the following command:
 
-`sudo apt-get install python python-bcrypt ntp php5 php5-mysql apache2 openvpn easy-rsa`
+`sudo apt-get install python python-bcrypt ntp php5 php5-mysql apache2 openvpn easy-rsa python-mysql.connector`
 
 OpenVPN and other configurations are not detailed here, look to the BlueBust setup for specific instructions on how to setup a BlueBust instance.
 
@@ -34,7 +34,7 @@ username-as-common-name
  * Create more specific instructions on how to configure the openvpn file to make sure it is a secure authencation still.
  * Stress testing
  * Login system for the dashboard itself.
- * Adding support for multiple databases.
+ * Adding support for multiple database systems.
  * Adding an install script to lessen the installation burden.
 
 ## License
