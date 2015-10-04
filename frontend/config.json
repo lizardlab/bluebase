@@ -1,6 +1,6 @@
 {
     "database_config":{
-        "host":"127.0.0.1",
+        "host":"localhost",
         "database_type":"mysql",
         "database_name":"bluebase",
         "username":"bluebase",
