@@ -1,7 +1,14 @@
+<?php
+session_start();
+// make sure that the dashboard only shows to logged in users
+if(!isset($_SESSION['auth']) || $_SESSION['auth'] != 1){
+    die('Not authenticated');
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />   
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>BlueBase Dashboard</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/datepicker.css">
@@ -14,9 +21,26 @@
 </head>
 <body>
   <div class="container">
-    <div align="center">
-      <h1>BlueBase Dashboard</h1>
-    </div>
+    <nav class="navbar navbar-default" style="margin-top: 20px;">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <a class="navbar-brand" href="#">BlueBase</a>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Dashboard<span class="sr-only">(current)</span></a></li>
+            <li><a href="admin.php">Admin</a></li>
+          </ul>
+          <p class="navbar-text navbar-right">Logged in as <a href="logout.php" class="navbar-link" style="font-weight: bold"><?php echo($_SESSION['username']) ?></a></p>
+        </div>
+      </div>
+    </nav>
     <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -25,15 +49,15 @@
       <div class="panel-body">
         <div class="form-group">
           <label>Username</label>
-          <input type="text" class="form-control" id="username" data-toggle="popover" title="Constraints" data-content="Valid characters: alphanumeric, _, -, ., @."/>
+          <input type="text" class="form-control" id="username" placeholder="username" data-toggle="popover" title="Constraints" data-content="Valid characters: alphanumeric, _, -, ., @."/>
         </div>
         <div class="form-group">
           <label>First Name</label>
-          <input type="text" class="form-control" id="fname" />
+          <input type="text" class="form-control" id="fname" placeholder="first name" />
         </div>
         <div class="form-group">
           <label>Last Name</label>
-          <input type="text" class="form-control" id="lname" />
+          <input type="text" class="form-control" id="lname" placeholder="last name" />
         </div>
         <div class="checkbox">
         <label><input id="chkExpire" type="checkbox" checked="true" onclick="toggleExpire();">Enable Expiration</input></label>
@@ -42,7 +66,7 @@
         <div class="form-group">
           <label>Expiration Date</label>
           <div class="input-group">
-            <input class="datepicker form-control" data-date-format="yyyy-mm-dd" id="expire" pattern="d{4}-d{2}-d{2}"></input> 
+            <input class="datepicker form-control" data-date-format="yyyy-mm-dd" id="expire" pattern="d{4}-d{2}-d{2}" placeholder="YYYY-MM-DD" ></input>
             <span class="input-group-addon">
               <i class="glyphicon glyphicon-calendar"></i>
             </span>
@@ -103,24 +127,24 @@
             <div class="form-group">
               <hidden type="text" id="useridChg"></hidden>
               <label>Username</label>
-              <input type="text" class="form-control" id="usernameChg" />
+              <input type="text" class="form-control" id="usernameChg" placeholder="username"/>
             </div>
             <div class="form-group">
               <label>First Name</label>
-              <input type="text" class="form-control" id="fnameChg" />
+              <input type="text" class="form-control" id="fnameChg" placeholder="first name"/>
             </div>
             <div class="form-group">
               <label>Last Name</label>
-              <input type="text" class="form-control" id="lnameChg" />
+              <input type="text" class="form-control" id="lnameChg" placeholder="last name" />
             </div>
             <div class="checkbox">
-            <label><input id="chkExpireChg" type="checkbox" checked="true" onclick="toggleExpireChg();">Enable Expiration</input></label>
+            <label><input id="chkExpireChg" type="checkbox" checked="true" onclick="toggleExpireChg();" >Enable Expiration</input></label>
             </div>
             <fieldset id="expireInputChg">
             <div class="form-group">
               <label>Expiration Date</label>
               <div class="input-group">
-                <input class="datepicker form-control" data-date-format="yyyy-mm-dd" id="expireChg" pattern="d{4}-d{2}-d{2}"></input> 
+                <input class="datepicker form-control" data-date-format="yyyy-mm-dd" id="expireChg" pattern="d{4}-d{2}-d{2}" placeholder="YYYY-MM-DD" ></input>
                 <span class="input-group-addon">
                   <i class="glyphicon glyphicon-calendar"></i>
                 </span>

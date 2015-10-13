@@ -2,7 +2,7 @@
 ![Screenshot](https://lizard.company/images/bluebase1.png)
 BlueBase is an authentication program written in PHP and Python for the purpose of providing an easy and lightweight username/password authentication system for OpenVPN, specifically for my circumvention project known as BlueBust. [BlueBust](https://lizard.company/boards/lcrad/2-bluebust-setup) is a combination of OpenVPN, stunnel, and iptables (with an optional BIND server) to create a robust filter circumvention system that was specifically targeted at BlueCoat. BlueBase is an extension of this body of work as the original BlueBust system relied on a Public Key Infrastructure in order to authenticate users, which is slightly more secure than username/password combinations, but has a higher administrative burden. This new system allows temporary disabling and automatic expiration of users, which allows for monetization or at least more control to make sure users do not abuse the service.
 
-Passwords are salted and hashed using Bcrypt, and the expiration date is NULLABLE but requires ISO 8601 format if used. The dashboard also comes with all the necessary javascript and css files within the directory so there is no need to make any external requests and possibly require unencrypted content if you run it over SSL. The dashboard allows you to create, edit, delete, and examine all the users and gives a nice little pie chart of the percentage of users enabled, disabled, and expired. **WARNING:** The dashboard is completely unprotected so it is highly recommended that you first run over SSL (to prevent password sniffing) and secure access to the directory using an .htpasswd file.
+Passwords are salted and hashed using Bcrypt, and the expiration date is NULLABLE but requires ISO 8601 format if used. The dashboard also comes with all the necessary javascript and css files within the directory so there is no need to make any external requests and possibly require unencrypted content if you run it over SSL. The dashboard allows you to create, edit, delete, and examine all the users and gives a nice little pie chart of the percentage of users enabled, disabled, and expired. The dashboard is now protected using standard PHP login system with passwords that are also secured by bcrypt.
 
 *Published: 2015-08-19*
 
@@ -29,11 +29,11 @@ auth-user-pass-verify auth.py via-file
 client-cert-not-required
 username-as-common-name
 ```
+5. Go to the folder where you installed it and login using the following credentials. Username: **admin** Password: **password**
+6. Change your password and username for security.
 
 ## TODO
- * Create more specific instructions on how to configure the openvpn file to preserve secure authentication
  * Stress testing
- * Login system for the dashboard itself
  * Adding support for multiple database systems
  * Adding an install script to lessen the installation burden
 

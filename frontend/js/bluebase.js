@@ -14,6 +14,7 @@ function refreshData(){
 }
 function processUpdate(update){
     $('#usersTable tr').remove();
+    userJson = update.users;
     jsonTable(update.users);
     usrChart.segments[0].value = update.statistics[0];
     usrChart.segments[1].value = update.statistics[1];
@@ -86,6 +87,7 @@ function changeUser(){
     // accepts only valid ISO 8601 dates
     var valiDate = /^\d{4}-[01]\d-[0-3]\d$/;
     // perform data formatting
+    
     if(document.getElementById('statusChg').checked){
         acctStatus = '1';
     }
@@ -99,16 +101,19 @@ function changeUser(){
         var expiryDate = null;
     }
     // perform data validation (validated on backend too)
-    if(valiDate.test(expiryDate) == false && expiryDate != null){
+    if($('#usernameChg').val().trim() == ''){
+        alert('Username cannot be blank');
+    }
+    else if(valiDate.test(expiryDate) == false && expiryDate != null){
         alert('Expiration date not valid');
     }
-    else if($('#password').val() != $('#repeatpw').val()){
+    else if($('#passwordChg').val() != $('#repeatpwChg').val()){
         alert('Password and repeated password do not match');
     }
-    // if all data checks out, POST to insert.php
+    // if all data checks out, POST to change.php
     else{
         var user = {
-            userid: $('#useridChg').val(),
+            userid: $('#useridChg').val().trim(),
             username: $('#usernameChg').val(),
             fname: $('#fnameChg').val(),
             lname: $('#lnameChg').val(),
@@ -129,6 +134,7 @@ function createUser(){
     // accepts only valid ISO 8601 dates
     var valiDate = /^\d{4}-[01]\d-[0-3]\d$/;
     // perform data formatting
+    
     if(document.getElementById('status').checked){
         acctStatus = '1';
     }
@@ -142,10 +148,13 @@ function createUser(){
         var expiryDate = null;
     }
     // perform data validation (validated on backend too)
-    if(valiDate.test(expiryDate) == false && expiryDate != null){
+    if($('#username').val().trim() == ''){
+        alert('You must set a username');
+    }
+    else if(valiDate.test(expiryDate) == false && expiryDate != null){
         alert('Expiration date not valid');
     }
-    else if($('#password').val() == '' || $('#repeatpw').val() == ''){
+    else if($('#password').val().trim() == '' || $('#repeatpw').val().trim() == ''){
         alert('You must set a password and repeat it');
     }
     else if($('#password').val() != $('#repeatpw').val()){
@@ -154,7 +163,7 @@ function createUser(){
     // if all data checks out, POST to insert.php
     else{
         var user = {
-            username: $('#username').val(),
+            username: $('#username').val().trim(),
             fname: $('#fname').val(),
             lname: $('#lname').val(),
             expire: expiryDate,
