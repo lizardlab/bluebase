@@ -22,7 +22,7 @@ Run the following command:
 
 OpenVPN and other configurations are not detailed here, look to the BlueBust setup for specific instructions on how to setup a BlueBust instance.
 
-1. Create a database and import the schema into the database, then configure the parameters located within the *auth.py* file and the *config.json* file to reflect the database and respective user.
+1. Create a database and use the *install.php* file to then import the schema, then configure the parameters located within the *auth.py* file and the *config.json* file to reflect the database and respective user.
 2. Place the *auth.py* file in the */etc/openvpn/* directory and place the contents of the *frontend* directory in your webroot or in a directory within the webroot. (Webroot on Debian is */var/www/*)
 3. Give all ownership to the group/user www-data. `sudo chown -R www-data:www-data /var/www/`
 4. Add the following lines to your openvpn config to switch from using certificate based authentication to username/password.
