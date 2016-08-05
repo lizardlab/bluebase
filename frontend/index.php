@@ -7,6 +7,7 @@ if(isset($_SESSION['auth']) && $_SESSION['auth'] === 1){
 <html>
 <head>
 <link rel="stylesheet" href="css/bootstrap.min.css" />
+<script src="js/jquery.min.js"></script>
 <title>BlueBase Login</title>
 <style>
 body {
@@ -52,13 +53,41 @@ body {
 </head>
 <body>
 <div class="container">
-<form method="POST" action="login.php" class="form-signin">
 <h1 align="center">BlueBase Login</h1>
+<div class="form-signin">
 <hr />
-<input class="form-control" type="text" name="username" placeholder="username"/>
-<input class="form-control" type="password" name="password" placeholder="password" />
-<button type="submit" class="btn btn-primary btn-block">Login</button>
-</form>
+<div class="alert alert-danger" style="display: none" role="alert" id='alertMsg'></div>
+<input class="form-control" type="text" name="username" placeholder="username" id="username" />
+<input class="form-control" type="password" name="password" placeholder="password" id="password" />
+<button type="submit" class="btn btn-primary btn-block" id='loginBtn'>Login</button>
 </div>
+</div>
+<script>
+$('#loginBtn').click(
+    function(){
+        var username = $('#username').val();
+        var password = $('#password').val();
+        $.post('login.php', {"username": username, "password": password}, function(data){
+            if(data.success == true){
+                window.location = 'dashboard.php';
+            }
+            else{
+                // set message using DOM for security reasons (XSS)
+                document.getElementById('alertMsg').textContent = data.message;
+                if ($("#alertMsg").is(":hidden")){
+                    $('#alertMsg').slideDown();
+                }
+            }
+        }, 'json');
+    }
+);
+$(document).keydown(function(event){
+    if (event.which == 13) {
+        event.preventDefault();
+        $("#loginBtn").trigger('click');
+    }
+});
+</script>
 </body>
 </html>
+
