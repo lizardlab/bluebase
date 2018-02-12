@@ -35,9 +35,8 @@ username-as-common-name
 6. Change your password and username for security.
 
 ## TODO
- * Stress testing
- * Adding support for multiple database systems
- * Adding an install script to lessen the installation burden
+ - [ ] Stress testing
+ - [ ] Adding support for multiple database systems
 
 ## License
 
